@@ -15,3 +15,7 @@ declare type PodcastData = {
   description: string;
   imgURL: string;
 };
+
+declare type StorageResponse = {
+  storageId: Id<"_storage">;
+};
