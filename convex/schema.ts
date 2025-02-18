@@ -8,7 +8,7 @@ export default defineSchema({
     title: v.string(),
     description: v.string(),
     audioUrl: v.optional(v.string()),
-    imageUrl: v.optional(v.string()),
+    imageUrl: v.string(),
     imageStorageId: v.optional(v.id("_storage")),
     author: v.string(),
     authorId: v.string(),

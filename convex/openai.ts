@@ -25,4 +25,25 @@ export const generateAudioAction = action({
   },
 });
 
-// INdices
+export const generateThumbnailAction = action({
+  args: { prompt: v.string() },
+  handler: async (_, { prompt }) => {
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      size: "1024x1024",
+      quality: "standard",
+      n: 1,
+      prompt,
+    });
+
+    const url = response.data[0].url;
+
+    if (!url) {
+      throw new Error("No image generated");
+    }
+
+    const imageResponse = await fetch(url);
+    const buffer = await imageResponse.arrayBuffer();
+    return buffer;
+  },
+});

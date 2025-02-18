@@ -10,10 +10,22 @@ declare type VoiceDetails = {
 };
 
 declare type PodcastData = {
-  id: number;
+  _id: string;
+  audioStorageId?: Id<"_storage">;
+  user: Id<"users">;
   title: string;
   description: string;
-  imgURL: string;
+  audioUrl?: string;
+  imageUrl: string;
+  imageStorageId?: Id<"_storage">;
+  author: string;
+  authorId: string;
+  authorImageUrl: string;
+  voicePrompt: string;
+  imagePrompt: string;
+  voiceType: string;
+  audioDuration: number;
+  views: number;
 };
 
 declare type StorageResponse = {

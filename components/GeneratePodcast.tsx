@@ -17,27 +17,36 @@ import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useToast } from "@/hooks/use-toast";
 
 const useGeneratePodcast = () => {
-  const form = useFormContext();
+  // States
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
+  // React Hook Form
+  const form = useFormContext();
+
+  // Toast
   const { toast } = useToast();
 
-  const getPodcastAudio = useAction(api.openai.generateAudioAction);
+  // Mutations
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-
-  const { startUpload } = useUploadFiles(generateUploadUrl);
-
   const getAudioUrl = useMutation(api.podcasts.getURL);
 
+  // Actions
+  const getPodcastAudio = useAction(api.openai.generateAudioAction);
+
+  // Hooks
+  const { startUpload } = useUploadFiles(generateUploadUrl);
+
+  // Form Values
   const voicePrompt = form.watch("voicePrompt");
   const voiceType = form.watch("voiceType");
 
+  // Arrow Functions
   const generatePodcast = async () => {
     setIsGenerating(true);
 
     if (!voicePrompt) {
       toast({
-        title: "Please provide a voiceType to generate a podcast",
+        title: "Please provide a voicePrompt to generate a podcast",
       });
       return setIsGenerating(false);
     }
@@ -80,7 +89,6 @@ const useGeneratePodcast = () => {
 
 const GeneratePodcast = () => {
   const form = useFormContext();
-
   const { isGenerating, generatePodcast } = useGeneratePodcast();
 
   const audio = form.watch("audio");

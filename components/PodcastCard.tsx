@@ -6,13 +6,13 @@ interface PodcastCardProps {
 }
 
 const PodcastCard = ({ podcast }: PodcastCardProps) => {
-  const { id: podcastId, title, imgURL, description } = podcast;
+  const { title, imageUrl, description } = podcast;
 
   return (
     <div className="cursor-pointer">
       <figure className="flex flex-col gap-2">
         <Image
-          src={imgURL}
+          src={imageUrl}
           width={174}
           height={174}
           alt={title}
