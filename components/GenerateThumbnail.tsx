@@ -1,15 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+
 import { useFormContext } from "react-hook-form";
-import { Textarea } from "./ui/textarea";
 import { Loader } from "lucide-react";
 import { Input } from "./ui/input";
 import Image from "next/image";
@@ -18,6 +11,7 @@ import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { v4 as uuidv4 } from "uuid";
+import TextareaField from "./inputs/controlled/TextareaField";
 
 const GenerateThumbnail = () => {
   // States
@@ -138,25 +132,12 @@ const GenerateThumbnail = () => {
       {isAiThumbnail ? (
         <div className="flex flex-col gap-5">
           <div className="mt-5 flex flex-col gap-2.5">
-            <FormField
+            <TextareaField
               control={form.control}
               name="imagePrompt"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-2.5">
-                  <FormLabel className="text-16 font-bold">
-                    Ai Prompt to generate Thumbnail
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="input-class"
-                      placeholder="Provide text to generate thumbnail"
-                      rows={5}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-white-1" />
-                </FormItem>
-              )}
+              label="Ai Prompt to generate Thumbnail"
+              placeholder="Provide text to generate thumbnail"
+              rows={5}
             />
           </div>
           <div className="w-full max-w-[200px]">

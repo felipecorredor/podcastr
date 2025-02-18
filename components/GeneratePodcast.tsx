@@ -1,12 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { Textarea } from "./ui/textarea";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
 import { useState } from "react";
@@ -15,6 +8,7 @@ import { api } from "@/convex/_generated/api";
 import { v4 as uuidv4 } from "uuid";
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useToast } from "@/hooks/use-toast";
+import TextareaField from "./inputs/controlled/TextareaField";
 
 const useGeneratePodcast = () => {
   // States
@@ -96,25 +90,12 @@ const GeneratePodcast = () => {
   return (
     <div>
       <div className="flex flex-col gap-2.5">
-        <FormField
+        <TextareaField
           control={form.control}
           name="voicePrompt"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-2.5">
-              <FormLabel className="text-16 font-bold">
-                Ai Prompt to generate podcast
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  className="input-class"
-                  placeholder="Provide text to generate audio"
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="text-white-1" />
-            </FormItem>
-          )}
+          label="Ai Prompt to generate podcast"
+          rows={5}
+          placeholder="Provide text to generate audio"
         />
       </div>
       <div className="mt-5 w-full max-w-[200px]">

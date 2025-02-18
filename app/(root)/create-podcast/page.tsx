@@ -3,29 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Id } from "@/convex/_generated/dataModel";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
 import GeneratePodcast from "@/components/GeneratePodcast";
 import GenerateThumbnail from "@/components/GenerateThumbnail";
 import { Loader } from "lucide-react";
@@ -33,42 +14,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
-
-const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
-  voiceType: z.string().nonempty("Please select a voice type"),
-  voicePrompt: z.string().min(10, {
-    message: "Voice prompt must be at least 10 character.",
-  }),
-  imagePrompt: z.string().min(0),
-  imageStorageId: z.custom<Id<"_storage">>(),
-  audioStorageId: z.custom<Id<"_storage">>(),
-  audioDuration: z.number(),
-  audioUrl: z.string(),
-  imageUrl: z.string(),
-  views: z.number(),
-});
-
-const voiceCategories = ["alloy", "shimmer", "nova", "echo", "fable", "onyx"];
-
-const defaultValues = {
-  title: "",
-  description: "",
-  voiceType: "",
-  voicePrompt: "",
-  imagePrompt: "",
-  imageStorageId: "" as unknown as Id<"_storage">,
-  audioUrl: "",
-  imageUrl: "",
-  audioDuration: 0,
-  audioStorageId: "" as unknown as Id<"_storage">,
-  views: 0,
-};
+import TextField from "@/components/inputs/controlled/TextField";
+import { formSchema } from "./@constants/formSchema";
+import SelectField from "@/components/inputs/controlled/SelectField";
+import TextareaField from "@/components/inputs/controlled/TextareaField";
+import { defaultValues } from "./@constants/defaultValues";
+import { voiceCategories } from "./@constants/voiceCategories";
 
 const CreatePodcast = () => {
   // Router
@@ -77,6 +28,7 @@ const CreatePodcast = () => {
   // Toast
   const { toast } = useToast();
 
+  // React Hook Form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -85,9 +37,9 @@ const CreatePodcast = () => {
   const isSubmitting = form.formState.isSubmitting;
   const voiceType = form.watch("voiceType");
 
+  // Mutations
   const createPodcast = useMutation(api.podcasts.createPodcast);
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (!values.audioUrl || !values.imageUrl) {
@@ -124,64 +76,19 @@ const CreatePodcast = () => {
           className="mt-12 flex w-full flex-col"
         >
           <div className="flex flex-col gap-[30px] border-b border-black-5 pb-10">
-            <FormField
+            <TextField
               control={form.control}
               name="title"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-2.5">
-                  <FormLabel className="text-16 font-bold">Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="input-class"
-                      placeholder="JSM Pro Podcast"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-white-1" />
-                </FormItem>
-              )}
+              placeholder="JSM Pro Podcast"
+              label="Podcast Title"
             />
 
             <div className="flex flex-col gap-2.5">
-              <FormField
+              <SelectField
                 control={form.control}
                 name="voiceType"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col gap-2.5">
-                    <FormLabel className="text-16 font-bold">
-                      Select AI Label
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger
-                          className={cn(
-                            "text-16 w-full border-none bg-black-1 text-gray-1"
-                          )}
-                        >
-                          <SelectValue
-                            placeholder="Select AI Voice"
-                            className="placeholder:text-gray-1"
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="text-16 border-none bg-black-1 font-bold focus:ring-orange-1">
-                          {voiceCategories.map((voice) => (
-                            <SelectItem
-                              key={voice}
-                              value={voice}
-                              className="capitalize focus:bg-orange-1"
-                            >
-                              {voice}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage className="text-white-1" />
-                  </FormItem>
-                )}
+                label="Select AI Label"
+                categories={voiceCategories}
               />
 
               {voiceType && (
@@ -189,25 +96,11 @@ const CreatePodcast = () => {
               )}
             </div>
 
-            {/* HERE */}
-            <FormField
+            <TextareaField
               control={form.control}
               name="description"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-2.5">
-                  <FormLabel className="text-16 font-bold">
-                    Description
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="input-class"
-                      placeholder="Write a short description of your podcast"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-white-1" />
-                </FormItem>
-              )}
+              label="Description"
+              placeholder="Write a short description of your podcast"
             />
           </div>
 
